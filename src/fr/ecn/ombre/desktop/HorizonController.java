@@ -46,7 +46,7 @@ public class HorizonController extends Controller {
 	public void next() {
 		this.getMainController().getImageInfos().setYHorizon(this.yHorizon);
 		
-		//TODO: Next controller
+		this.getMainController().setController(new FacesController());
 	}
 
 	/**
