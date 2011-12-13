@@ -21,6 +21,7 @@ public class FacesOptionsPanel extends JPanel {
 	protected FacesController controller;
 	protected FacesImagePanel imagePanel;
 	
+	protected JButton resetFace;
 	protected JButton endFace;
 	protected BackNextPanel backNextPanel;
 
@@ -40,15 +41,7 @@ public class FacesOptionsPanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
-		//Idle :
-		// - Start Face
-		//Create :
-		// - Reset Face
-		//Edit
-		// - Reset Face
-		// - End face
-		
-		JButton resetFace = new JButton("Reset face");
+		resetFace = new JButton("Reset face");
 		resetFace.setAlignmentX(CENTER_ALIGNMENT);
 		resetFace.addActionListener(new ActionListener() {
 			@Override

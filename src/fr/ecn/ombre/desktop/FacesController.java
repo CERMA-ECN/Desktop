@@ -67,7 +67,7 @@ public class FacesController extends Controller {
 		
 		this.getMainController().getImageInfos().setFaces(this.faces);
 		
-		//TODO: Next controller
+		this.getMainController().setController(new OptionsController());
 	}
 	
 	/**
@@ -82,6 +82,7 @@ public class FacesController extends Controller {
 		case STATE_IDLE:
 			break;
 		case STATE_CREATE:
+			this.optionsPanel.resetFace.setEnabled(false);
 			this.optionsPanel.endFace.setEnabled(false);
 			break;
 		case STATE_EDIT:
@@ -101,6 +102,8 @@ public class FacesController extends Controller {
 		}
 		
 		this.face.getPoints().add(new Point(x, y));
+		
+		this.optionsPanel.resetFace.setEnabled(true);
 		
 		if (this.face.getPoints().size() == 4) {
 			this.setState(STATE_EDIT);
