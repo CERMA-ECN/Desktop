@@ -1,6 +1,8 @@
 package fr.ecn.ombre.desktop;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +12,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,14 +20,14 @@ import javax.swing.JTextField;
 
 import fr.ecn.common.desktop.utils.BackNextPanel;
 
-public class OptionsOptionsPanel extends JPanel {
+public class ResultOptionsPanel extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected OptionsController controller;
+	protected ResultController controller;
 	
 	protected BackNextPanel backNextPanel;
 
@@ -39,7 +42,7 @@ public class OptionsOptionsPanel extends JPanel {
 	 * @param controller
 	 * @param imagePanel 
 	 */
-	public OptionsOptionsPanel(OptionsController controller) {
+	public ResultOptionsPanel(ResultController controller) {
 		super();
 		this.controller = controller;
 		
@@ -72,9 +75,20 @@ public class OptionsOptionsPanel extends JPanel {
 		
 		this.add(form);
 		
+		JButton shadowButton = new JButton("Draw shadows");
+		shadowButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.compute();
+			}
+		});
+		shadowButton.setAlignmentX(CENTER_ALIGNMENT);
+		this.add(shadowButton);
+		
 		this.add(Box.createVerticalGlue());
 		
 		this.backNextPanel = new BackNextPanel(this.controller);
+		this.backNextPanel.setNextEnabled(false);
 		this.add(this.backNextPanel);
 	}
 	

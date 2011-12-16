@@ -72,6 +72,13 @@ public class MainController {
 		this.controller = controller;
 		this.controller.setMainController(this);
 		
+		this.initController();
+	}
+	
+	/**
+	 * Start the current controller initialization
+	 */
+	private void initController() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

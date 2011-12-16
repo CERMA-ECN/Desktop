@@ -1,10 +1,12 @@
 package fr.ecn.ombre.desktop;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import fr.ecn.common.core.image.Image;
 import fr.ecn.common.core.imageinfos.Face;
@@ -17,46 +19,65 @@ import fr.ecn.ombre.core.shadows.ShadowDrawingFace;
 import fr.ecn.ombre.core.shadows.ShadowDrawingFactory;
 
 public class ResultController extends Controller {
-
-	protected Calendar date;
-	protected boolean shadowsOnWalls;
-	protected boolean expendToStreet;
 	
-	protected List<ShadowDrawingFace> shadows;
+	protected List<ShadowDrawingFace> shadows = null;;
+	
+	protected ResultOptionsPanel optionsPanel;
+	protected ResultImagePanel imagePanel;
 	
 	/**
 	 * @param date
 	 * @param shadowsOnWalls
 	 * @param expendToStreet
 	 */
-	public ResultController(Calendar date, boolean shadowsOnWalls, boolean expendToStreet) {
+	public ResultController() {
 		super();
-		this.date = date;
-		this.shadowsOnWalls = shadowsOnWalls;
-		this.expendToStreet = expendToStreet;
 	}
 
 	@Override
 	public void init() {
-		try {
-			this.computeShadows();
-		} catch (ShadowDrawingException e) {
-			JOptionPane.showMessageDialog(this.getMainController().getMainWindow(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			
-			this.back();
-		}
 	}
 
 	@Override
 	public void initDisplay() {
-		// TODO Auto-generated method stub
-		this.getMainController().getMainWindow().setImagePanel(new ResultImagePanel(this.getMainController().getAwtImage(), this));
+		optionsPanel = new ResultOptionsPanel(this);
+		imagePanel = new ResultImagePanel(this.getMainController().getAwtImage(), this);
+		
+		this.getMainController().getMainWindow().setOptionsPanel(optionsPanel);
+		this.getMainController().getMainWindow().setImagePanel(imagePanel);
 	}
 
 	@Override
 	public void next() {}
 	
-	private void computeShadows() throws ShadowDrawingException {
+	public void compute() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					optionsPanel.valid();
+					
+					Calendar date = optionsPanel.date;
+					boolean shadowsOnWalls = optionsPanel.getShadowsOnWalls();
+					boolean expendToStreet = optionsPanel.getExpendToStreet();
+					
+					computeShadows(date, shadowsOnWalls, expendToStreet);
+
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							imagePanel.repaint();
+						}
+					});
+				} catch (ShadowDrawingException e) {
+					JOptionPane.showMessageDialog(getMainController().getMainWindow(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				} catch (ParseException e) {
+					JOptionPane.showMessageDialog(getMainController().getMainWindow(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}).start();
+	}
+	
+	private void computeShadows(Calendar date, boolean shadowsOnWalls, boolean expendToStreet) throws ShadowDrawingException {
 		//Initialize the shadows List
 		this.shadows = new LinkedList<ShadowDrawingFace>();
 		
@@ -75,7 +96,7 @@ public class ResultController extends Controller {
 
 		Image image = this.getMainController().getCalcImage();
 		
-		ShadowDrawingFactory sdf = new ShadowDrawingFactory(image, imageInfos, faces, this.date);
+		ShadowDrawingFactory sdf = new ShadowDrawingFactory(image, imageInfos, faces, date);
 		ShadowDrawing shadowDrawing = sdf.getShadowDrawing();
 		
 		// =============================================================//

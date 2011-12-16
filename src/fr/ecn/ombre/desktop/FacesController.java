@@ -67,7 +67,7 @@ public class FacesController extends Controller {
 		
 		this.getMainController().getImageInfos().setFaces(this.faces);
 		
-		this.getMainController().setController(new OptionsController());
+		this.getMainController().setController(new ResultController());
 	}
 	
 	/**

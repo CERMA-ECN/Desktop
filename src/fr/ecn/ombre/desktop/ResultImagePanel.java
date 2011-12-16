@@ -32,6 +32,10 @@ public class ResultImagePanel extends ImagePanel {
 		
 		g.drawImage(this.image, 0, 0, (int) (this.image.getWidth(null) * scale), (int) (this.image.getHeight(null) * scale), this);
 
+		if (this.controller.shadows == null) {
+			return;
+		}
+		
 		g.setColor(new Color(0, 0, 255, 50));
 		
 		for (ShadowDrawingFace fOmbre : this.controller.shadows) {

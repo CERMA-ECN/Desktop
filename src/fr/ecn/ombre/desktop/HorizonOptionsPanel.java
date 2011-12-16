@@ -42,7 +42,7 @@ public class HorizonOptionsPanel extends JPanel {
 		resetFace.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				controller.getMainController().setController(new VanishingPointsController(controller));
 			}
 		});
 		this.add(resetFace);
